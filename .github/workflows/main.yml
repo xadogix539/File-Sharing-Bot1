@@ -1,0 +1,21 @@
+   name: Auto Update Bot
+
+   on:
+     push:
+       branches:
+         - main
+
+   jobs:
+     update:
+       runs-on: ubuntu-latest
+
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
+
+         - name: Pull latest changes
+           run: |
+             cd File-Sharing-Bot1
+             git pull origin main
+             # Restart bot or run tests here
+   
