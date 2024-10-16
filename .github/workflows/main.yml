@@ -1,4 +1,4 @@
-   name: Auto Update Bot
+   name: Auto Update Telegram Bot
 
    on:
      push:
@@ -6,16 +6,21 @@
          - main
 
    jobs:
-     update:
+     deploy:
        runs-on: ubuntu-latest
 
        steps:
          - name: Checkout code
            uses: actions/checkout@v2
 
-         - name: Pull latest changes
-           run: |
-             cd File-Sharing-Bot1
-             git pull origin main
-             # Restart bot or run tests here
+         - name: SSH to Server and Pull Changes
+           uses: appleboy/scp-action@master
+           with:
+             host: ${{ secrets.SERVER_IP }}
+             username: ${{ secrets.USERNAME }}
+             key: ${{ secrets.SSH_KEY }}
+             source: "/path/to/your/telegram-bot"
+             target: "/path/on/server"
+         - name: Restart Bot
+           run: ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.USERNAME }}@${{ secrets.SERVER_IP }} 'cd /path/on/server && bash update_bot.sh'
    
